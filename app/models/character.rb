@@ -8,7 +8,7 @@ class Character < ApplicationRecord
               :movie,
               presence: true
     
-    validates :age, numericality { only_integer: true}
+    validates :age, numericality: { only_integer: true }
     validates :weight, numericality: true
     
 end
