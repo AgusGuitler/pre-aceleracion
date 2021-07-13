@@ -8,6 +8,9 @@ module Api
             end
 
             def show
+                character
+
+                render json: character, serializer: ShowCharacterSerializer::CharacterSerializer, status: :ok
             end
 
             def update
@@ -18,6 +21,12 @@ module Api
 
             def destroy
             end
+
+            private
+                def character
+                    @character ||= Character.find(params[:id])                
+                end
+
         end
     end
 end    
