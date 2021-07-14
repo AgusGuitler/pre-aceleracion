@@ -3,7 +3,7 @@ module Api
         class MovieSerializer < ApplicationSerializer
             attributes :id,
                        :title,
-                       :qualification,
+                       :date_of_creation,
                        :image
         end
     end
