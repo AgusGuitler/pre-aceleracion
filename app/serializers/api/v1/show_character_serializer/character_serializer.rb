@@ -3,6 +3,7 @@ module Api
         module ShowCharacterSerializer
             class CharacterSerializer < ApplicationSerializer
                 attributes :id,
+                           :name,
                            :image,
                            :age,
                            :weight,
