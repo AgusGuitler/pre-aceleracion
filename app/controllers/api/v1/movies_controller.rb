@@ -12,35 +12,33 @@ module Api
             end
 
             def update
-                update_character = Character.update(update_character_params)
+                movie
 
-                if update_character
-                    render json: update_character, serializer: ShowCharacterSerializer::CharacterSerializer, status: :update                    
+                if movie
+                    render json: movie, serializer: ShowMovieSerializer::MovieSerializer, status: :ok                    
                 else
                     render json: { error: "We can't update the data" }, status: :unprocessable_entity
                 end
             end
 
             def create
-                create_character = Character.new(creation_character_params)
+                create_movie = Movie.new(creation_movie_params)
 
-                create_character.movie = movie
-                if create_character.save
-                    render json: create_character, serializer: ShowCharacterSerializer::CharacterSerializer, status: :created
+                create_movie.genre = associated_genre
+                if create_movie.save
+                    render json: create_movie, serializer: ShowMovieSerializer::MovieSerializer, status: :created
                 else
-                    render json: { error: "We can't save your character" }, status: :unprocessable_entity
+                    render json: { error: "We can't save your movie" }, status: :unprocessable_entity
                 end
 
             end
 
             def destroy
-                destroy_charcter = Character.destroy
-                
-                if destroy_charcter
-                    render json: { success: true }
-                else
-                    render json: { success: false }
+                if movie.present?
+                    movie.destroy
                 end
+
+                head :no_content
             end
 
             private
@@ -73,25 +71,18 @@ module Api
                     @movie ||= Movie.find(params[:id])                
                 end
 
-                #def creation_character_params
-                #    params.permit(
-                #        :name,
-                #        :age,
-                #        :weight,
-                #        :history,
-                #        :movie
-                #    )
-                #end
+                def associated_genre
+                    @genre ||= Genre.find_by(name: params[:genre])
+                end
 
-                #def update_character_params
-                #    params.permit(
-                #        :name,
-                #        :age,
-                #        :weight,
-                #        :history,
-                #        :movie
-                #    )
-                #end
+                def creation_movie_params
+                    params.permit(
+                        :title,
+                        :date_of_creation,
+                        :qualification,
+                        :image
+                    )
+                end
         end
     end
 end    
