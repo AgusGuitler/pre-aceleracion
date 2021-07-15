@@ -12,10 +12,10 @@ module Api
             end
 
             def update
-                update_character = Character.update(update_character_params)
+                character
 
-                if update_character
-                    render json: update_character, serializer: ShowCharacterSerializer::CharacterSerializer, status: :update                    
+                if character
+                    render json: character, serializer: ShowCharacterSerializer::CharacterSerializer, status: :ok                    
                 else
                     render json: { error: "We can't update the data" }, status: :unprocessable_entity
                 end
@@ -24,7 +24,7 @@ module Api
             def create
                 create_character = Character.new(creation_character_params)
 
-                create_character.movie = movie
+                create_character.movie = associated_movie
                 if create_character.save
                     render json: create_character, serializer: ShowCharacterSerializer::CharacterSerializer, status: :created
                 else
@@ -34,13 +34,11 @@ module Api
             end
 
             def destroy
-                destroy_charcter = Character.destroy
-                
-                if destroy_charcter
-                    render json: { success: true }
-                else
-                    render json: { success: false }
+                if character.present?
+                    character.destroy
                 end
+
+                head :no_content
             end
 
             private
@@ -73,23 +71,17 @@ module Api
                     @character ||= Character.find(params[:id])                
                 end
 
+                def associated_movie
+                    @movie ||= Movie.find_by(title: params[:movie])
+                end
+
                 def creation_character_params
                     params.permit(
                         :name,
                         :age,
                         :weight,
                         :history,
-                        :movie
-                    )
-                end
-
-                def update_character_params
-                    params.permit(
-                        :name,
-                        :age,
-                        :weight,
-                        :history,
-                        :movie
+                        :image
                     )
                 end
         end

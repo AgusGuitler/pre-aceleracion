@@ -5,7 +5,6 @@ class Character < ApplicationRecord
               :age,
               :weight,
               :history,
-              :movie,
               presence: true
     
     validates :age, numericality: { only_integer: true }
